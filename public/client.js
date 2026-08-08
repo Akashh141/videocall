@@ -242,7 +242,7 @@
       $("shareLink").value = url;
       $("shareBox").classList.remove("hidden");
       console.log("Create Call clicked, link:", url);
-      alert("Call link created:\n" + url);
+      if (!room) startCall(id);
     } catch (e) {
       alert("Create Call error: " + e.message);
     }
