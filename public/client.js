@@ -2,6 +2,11 @@
   window.addEventListener("error", (e) => {
     const el = document.getElementById("log");
     if (el) el.textContent += "ERROR: " + (e.message || e.error) + "\n";
+    const banner = document.getElementById("loadedBanner");
+    if (banner) {
+      banner.style.background = "#dc2626";
+      banner.textContent = "ERROR: " + (e.message || e.error);
+    }
   });
 
   // visible proof the script executed
