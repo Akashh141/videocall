@@ -130,6 +130,7 @@
   }
 
   function createPeerConnection() {
+    if (pc) return pc;
     const config = { iceServers: ICE_SERVERS, iceCandidatePoolSize: 10 };
     pc = new RTCPeerConnection(config);
     if (localStream) {
@@ -166,6 +167,10 @@
       $("roomId").textContent = room;
       log("Joined. Initiator=" + isInitiator);
       msg.peers.forEach((ip) => appendPeer(ip));
+      if (msg.peers.length > 0) {
+        createPeerConnection();
+        log("Prepared pc (peer already present)");
+      }
     } else if (msg.type === "peer-joined") {
       appendPeer(msg.ip);
       log("Peer joined: " + msg.ip);
