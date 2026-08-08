@@ -32,7 +32,10 @@
     { urls: "stun:stun.linode.com:3478" },
     { urls: "stun:global.stun.twilio.com:3478" },
   ];
-  if (window.APP_TURN) ICE_SERVERS.push(window.APP_TURN);
+  if (window.APP_TURN) {
+    if (Array.isArray(window.APP_TURN)) ICE_SERVERS.push(...window.APP_TURN);
+    else ICE_SERVERS.push(window.APP_TURN);
+  }
 
   const APP_BASE = (window.APP_BASE_URL || location.origin) + location.pathname;
   if (typeof APP_BASE !== "string" || APP_BASE.indexOf("undefined") === 0) {
@@ -142,8 +145,16 @@
         ws.send(JSON.stringify({ type: "signal", data: { candidate: e.candidate } }));
       }
     };
-    pc.oniceconnectionstatechange = () => log("ICE state: " + pc.iceConnectionState);
-    pc.onconnectionstatechange = () => log("PC state: " + pc.connectionState);
+    pc.oniceconnectionstatechange = () => {
+      log("ICE state: " + pc.iceConnectionState);
+      const el = $("connState");
+      if (el) el.textContent = pc.iceConnectionState;
+    };
+    pc.onconnectionstatechange = () => {
+      log("PC state: " + pc.connectionState);
+      const el = $("connState");
+      if (el) el.textContent = pc.connectionState;
+    };
     return pc;
   }
 

@@ -24,13 +24,15 @@ function requestHandler(req, res) {
 
   if (pathname === "/config.js") {
     const base = PUBLIC_HOST ? `${USE_HTTPS ? "https" : "http"}://${PUBLIC_HOST}` : `${USE_HTTPS ? "https" : "http"}://${req.headers.host}`;
-    const turn = process.env.TURN_URL
-      ? {
-          urls: process.env.TURN_URL,
-          username: process.env.TURN_USER || "",
-          credential: process.env.TURN_PASS || "",
-        }
-      : null;
+    let turn = null;
+    if (process.env.TURN_URL) {
+      const urls = process.env.TURN_URL.split(",").map((s) => s.trim()).filter(Boolean);
+      turn = urls.map((u) => ({
+        urls: u,
+        username: process.env.TURN_USER || "",
+        credential: process.env.TURN_PASS || "",
+      }));
+    }
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(
       `window.APP_BASE_URL = ${JSON.stringify(base)};\n` +

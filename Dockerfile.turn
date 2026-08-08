@@ -1,0 +1,7 @@
+FROM coturn/coturn:latest
+
+COPY turnserver.conf /etc/turnserver.conf
+
+EXPOSE 3478/udp 3478/tcp 5349/tcp
+
+ENTRYPOINT ["turnserver", "-c", "/etc/turnserver.conf", "-v"]
