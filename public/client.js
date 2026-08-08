@@ -108,7 +108,6 @@
         ws.send(JSON.stringify({ type: "signal", data: { candidate: e.candidate } }));
       }
     };
-    };
     pc.oniceconnectionstatechange = () => log("ICE state: " + pc.iceConnectionState);
     pc.onconnectionstatechange = () => log("PC state: " + pc.connectionState);
     return pc;
