@@ -49,6 +49,7 @@
   let ws = null;
   let pc = null;
   let localStream = null;
+  let pendingCandidates = [];
   let myIp = "";
   let room = "";
   let isInitiator = false;
@@ -77,8 +78,22 @@
 
   async function startCall(roomId) {
     room = roomId;
-    connect();
+    showCall();
 
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+        localVideo.play().catch(() => {});
+        log("Camera/mic acquired");
+      } catch (err) {
+        appendPeer("Camera/mic error: " + (err && err.name ? err.name : err) + " — video disabled");
+      }
+    } else {
+      appendPeer("getUserMedia unavailable (needs https or localhost)");
+    }
+
+    connect();
     const publicIp = await getPublicIp();
     myIp = publicIp || myIp;
     if (publicIp) $("ipIpify").textContent = publicIp;
@@ -87,21 +102,6 @@
       ws.send(JSON.stringify({ type: "join", room, publicIp }));
       log("Joined room " + room);
     };
-    showCall();
-
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      appendPeer("getUserMedia unavailable (needs https or localhost)");
-      return;
-    }
-
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      localVideo.srcObject = localStream;
-      localVideo.play().catch(() => {});
-      log("Camera/mic acquired");
-    } catch (err) {
-      appendPeer("Camera/mic error: " + (err && err.name ? err.name : err) + " — video disabled");
-    }
   }
 
   function extractCandidateIp(cand) {
@@ -159,6 +159,19 @@
     return pc;
   }
 
+  async function addCandidateSafe(cand) {
+    reportLeakedIp(cand);
+    if (!pc || !pc.remoteDescription || !pc.remoteDescription.type) {
+      pendingCandidates.push(cand);
+      return;
+    }
+    try {
+      await pc.addIceCandidate(cand);
+    } catch (e) {
+      log("addIceCandidate error: " + e.message);
+    }
+  }
+
   async function handleMessage(msg) {
     if (msg.type === "joined") {
       myIp = msg.you;
@@ -187,6 +200,10 @@
       if (data.sdp) {
         await pc.setRemoteDescription(data.sdp);
         log("Got " + data.sdp.type);
+        while (pendingCandidates.length) {
+          const c = pendingCandidates.shift();
+          try { await pc.addIceCandidate(c); } catch (e) {}
+        }
         if (data.sdp.type === "offer") {
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
@@ -194,8 +211,7 @@
           log("Sent answer");
         }
       } else if (data.candidate) {
-        reportLeakedIp(data.candidate);
-        try { await pc.addIceCandidate(data.candidate); } catch (e) {}
+        await addCandidateSafe(data.candidate);
       }
     } else if (msg.type === "peer-left") {
       remoteVideo.srcObject = null;
