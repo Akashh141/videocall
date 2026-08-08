@@ -1,4 +1,9 @@
 (() => {
+  window.addEventListener("error", (e) => {
+    const el = document.getElementById("log");
+    if (el) el.textContent += "ERROR: " + (e.message || e.error) + "\n";
+  });
+
   const ICE_SERVERS = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
@@ -8,6 +13,9 @@
   ];
 
   const APP_BASE = (window.APP_BASE_URL || location.origin) + location.pathname;
+  if (typeof APP_BASE !== "string" || APP_BASE.indexOf("undefined") === 0) {
+    console.warn("APP_BASE resolved oddly:", APP_BASE);
+  }
   const lobby = $("lobby");
   const callScreen = $("call");
   const localVideo = $("localVideo");
@@ -186,10 +194,15 @@
   }
 
   $("createBtn").onclick = () => {
-    const id = genRoom();
-    const url = `${APP_BASE}?room=${id}`;
-    $("shareLink").value = url;
-    $("shareBox").classList.remove("hidden");
+    try {
+      const id = genRoom();
+      const url = `${APP_BASE}?room=${id}`;
+      $("shareLink").value = url;
+      $("shareBox").classList.remove("hidden");
+      console.log("Create Call clicked, link:", url);
+    } catch (e) {
+      alert("Create Call error: " + e.message);
+    }
   };
 
   $("copyBtn").onclick = () => {
