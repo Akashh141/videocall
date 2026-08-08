@@ -23,6 +23,8 @@
     if (!b) document.body.prepend(_loaded);
   }
 
+  const $ = (id) => document.getElementById(id);
+
   const ICE_SERVERS = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
