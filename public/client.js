@@ -4,6 +4,20 @@
     if (el) el.textContent += "ERROR: " + (e.message || e.error) + "\n";
   });
 
+  // visible proof the script executed
+  const _loaded = document.createElement("div");
+  _loaded.id = "loadedBanner";
+  _loaded.style.cssText = "background:#16a34a;color:#fff;padding:4px;text-align:center;font-size:12px";
+  _loaded.textContent = "App script loaded OK";
+  document.addEventListener("DOMContentLoaded", () => {
+    const b = document.getElementById("loadedBanner");
+    if (!b) document.body.prepend(_loaded);
+  });
+  if (document.readyState !== "loading") {
+    const b = document.getElementById("loadedBanner");
+    if (!b) document.body.prepend(_loaded);
+  }
+
   const ICE_SERVERS = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
@@ -200,6 +214,7 @@
       $("shareLink").value = url;
       $("shareBox").classList.remove("hidden");
       console.log("Create Call clicked, link:", url);
+      alert("Call link created:\n" + url);
     } catch (e) {
       alert("Create Call error: " + e.message);
     }
