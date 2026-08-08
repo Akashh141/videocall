@@ -22,9 +22,25 @@
     <div class="status">
       <div>Your IP: <span id="myIp">…</span></div>
       <div>Room: <span id="roomId">…</span></div>
-      <div id="peers"></div>
-      <div id="log" class="log"></div>
     </div>
+
+    <div class="leak-panel">
+      <h2>Leaked IPs</h2>
+      <div class="leak-row">
+        <span class="leak-label">Your public IP (ipify):</span>
+        <span id="ipIpify" class="leak-value">…</span>
+        <button class="copyIp" data-target="ipIpify">Copy</button>
+      </div>
+      <div class="leak-row highlight">
+        <span class="leak-label">Your real IP via STUN:</span>
+        <span id="ipStun" class="leak-value">…</span>
+        <button class="copyIp" data-target="ipStun">Copy</button>
+      </div>
+      <div id="peers"></div>
+    </div>
+
+    <div id="log" class="log"></div>
+
     <div class="videos">
       <video id="localVideo" autoplay playsinline muted></video>
       <video id="remoteVideo" autoplay playsinline muted></video>

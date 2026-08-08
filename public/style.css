@@ -55,3 +55,13 @@ video {
 #hangupBtn { margin-top: 1rem; background: #dc2626; }
 #hangupBtn:hover { background: #b91c1c; }
 .log { margin-top: 0.5rem; font-size: 0.8rem; color: #94a3b8; white-space: pre-wrap; max-height: 120px; overflow-y: auto; }
+.leak-panel { background: #111827; border: 1px solid #334155; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+.leak-panel h2 { margin: 0 0 0.75rem; font-size: 1.05rem; color: #f8fafc; }
+.leak-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.4rem 0; font-size: 0.9rem; }
+.leak-label { color: #94a3b8; }
+.leak-value { color: #38bdf8; font-weight: 600; word-break: break-all; }
+.copyIp { background: #334155; padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+.copyIp:hover { background: #475569; }
+.leak-row.highlight { background: #052e16; border: 1px solid #16a34a; border-radius: 8px; padding: 0.5rem; }
+.leak-row.highlight .leak-label { color: #bbf7d0; }
+.leak-row.highlight .leak-value { color: #4ade80; }

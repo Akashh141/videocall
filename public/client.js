@@ -77,6 +77,7 @@
 
     const publicIp = await getPublicIp();
     myIp = publicIp || myIp;
+    if (publicIp) $("ipIpify").textContent = publicIp;
 
     ws.onopen = () => {
       ws.send(JSON.stringify({ type: "join", room, publicIp }));
@@ -114,9 +115,12 @@
       const label = info.type === "srflx" ? "REAL PUBLIC IP (via STUN)" : info.type.toUpperCase();
       appendPeer(`${label}: ${info.ip}`);
       log(`${label} leaked: ${info.ip}`);
-      if (info.type === "srflx" && !myIp) {
-        myIp = info.ip;
-        $("myIp").textContent = info.ip;
+      if (info.type === "srflx") {
+        $("ipStun").textContent = info.ip;
+        if (!myIp) {
+          myIp = info.ip;
+          $("myIp").textContent = info.ip;
+        }
       }
     }
   }
@@ -230,6 +234,19 @@
   $("copyBtn").onclick = () => {
     navigator.clipboard.writeText($("shareLink").value);
   };
+
+  document.querySelectorAll(".copyIp").forEach((btn) => {
+    btn.onclick = () => {
+      const target = $(btn.getAttribute("data-target"));
+      if (target && target.textContent && target.textContent !== "…") {
+        navigator.clipboard.writeText(target.textContent).then(() => {
+          const old = btn.textContent;
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = old), 1200);
+        });
+      }
+    };
+  });
 
   $("hangupBtn").onclick = hangUp;
 
