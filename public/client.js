@@ -79,6 +79,9 @@
   async function startCall(roomId) {
     room = roomId;
     showCall();
+    const callLink = `${APP_BASE}?room=${room}`;
+    const csl = $("callShareLink");
+    if (csl) csl.value = callLink;
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try {
