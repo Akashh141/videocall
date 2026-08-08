@@ -1,0 +1,17 @@
+{
+  "name": "videocall",
+  "version": "1.0.0",
+  "description": "Simple link-based WebRTC video call with caller IP display",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "gencert": "node generate-cert.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "node-forge": "^1.4.0",
+    "ws": "^8.18.0"
+  }
+}

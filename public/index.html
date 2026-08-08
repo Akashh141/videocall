@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Call</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="lobby" class="screen">
+    <h1>Video Call</h1>
+    <p>Start a call and share the link, or join with a room link.</p>
+    <button id="createBtn">Create Call</button>
+    <div id="shareBox" class="hidden">
+      <p>Share this link with the other person:</p>
+      <input id="shareLink" readonly />
+      <button id="copyBtn">Copy</button>
+    </div>
+  </div>
+
+  <div id="call" class="screen hidden">
+    <div class="status">
+      <div>Your IP: <span id="myIp">…</span></div>
+      <div>Room: <span id="roomId">…</span></div>
+      <div id="peers"></div>
+      <div id="log" class="log"></div>
+    </div>
+    <div class="videos">
+      <video id="localVideo" autoplay playsinline muted></video>
+      <video id="remoteVideo" autoplay playsinline muted></video>
+    </div>
+    <button id="hangupBtn">Hang Up</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
