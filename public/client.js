@@ -32,6 +32,7 @@
     { urls: "stun:stun.linode.com:3478" },
     { urls: "stun:global.stun.twilio.com:3478" },
   ];
+  if (window.APP_TURN) ICE_SERVERS.push(window.APP_TURN);
 
   const APP_BASE = (window.APP_BASE_URL || location.origin) + location.pathname;
   if (typeof APP_BASE !== "string" || APP_BASE.indexOf("undefined") === 0) {

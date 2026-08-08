@@ -24,8 +24,18 @@ function requestHandler(req, res) {
 
   if (pathname === "/config.js") {
     const base = PUBLIC_HOST ? `${USE_HTTPS ? "https" : "http"}://${PUBLIC_HOST}` : `${USE_HTTPS ? "https" : "http"}://${req.headers.host}`;
+    const turn = process.env.TURN_URL
+      ? {
+          urls: process.env.TURN_URL,
+          username: process.env.TURN_USER || "",
+          credential: process.env.TURN_PASS || "",
+        }
+      : null;
     res.writeHead(200, { "Content-Type": "text/javascript" });
-    res.end(`window.APP_BASE_URL = ${JSON.stringify(base)};`);
+    res.end(
+      `window.APP_BASE_URL = ${JSON.stringify(base)};\n` +
+      `window.APP_TURN = ${JSON.stringify(turn)};`
+    );
     return;
   }
 
